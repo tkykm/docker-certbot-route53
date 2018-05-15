@@ -1,0 +1,118 @@
+# Purpose
+Automatic retrieval of certificate from let's encrypt using route53
+
+# How to use
+First you have to get aws access key using IAM Policy below.  
+And replace XXXXXXXXXXXXXX to your hostedzoneid.
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "route53:ChangeResourceRecordSets",
+      "Resource": "arn:aws:route53:::hostedzone/XXXXXXXXXXXXXX"
+    }
+   ]
+}
+```
+finally, run docker.
+***notice: we need to wait 25sec per domain to ensure change of dns record.***
+Your certificate and private key will be showed as standard output.
+You also can check the certificate and private key via docker logs if you do not use '--rm' option.
+```
+$ yes | docker run -i -e AWS_ACCESS_KEY_ID=xxx \
+-e AWS_SECRET_ACCESS_KEY=yyy \
+-e AWS_ROUTE53_HOSTED_ZONE_ID=zzz \
+--rm tkykm/certbot-route53 \
+-m address@gmail.com \
+-d "*.wild.domain.com" \
+-d sample.domain.com \
+-d hoge.sample.domain.com \
+-d api.sample.domain.com
+
+-----BEGIN CERTIFICATE-----
+MIIFLTCCBBWgAwIBAgISAwiBfVYm3OfhF8+UNVpZEs6zMA0GCSqGSIb3DQEBCwUA
+MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
+ExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzEyMjYwNTM2MzFaFw0x
+ODAzMjYwNTM2MzFaMDAxLjAsBgNVBAMTJWFvZ2VyYWRvbWFpbi50YW1hLmFzLmNs
+2ghDmtXsl2YlmyUhEkKQjHOCDvcHx3FsqY9RzmUJ97JI3/w3eq/+jz2FV49aWaqW
+Cx8j2wM9vR+AmGfs8NTebM/ck7FCG7LVaTco0Yi/x9/gE2sQQ2CCCy5j1dYbHPej
+0pe6pmgOoSJUp1oyNQBdCCf+QpkyfagVAoieBrSjeKPXoS41Q9e+VDxXsUwTtgZ4
+xLv97wV+qWKkB8W6LZojHDr47ytu79dbRo1k7F7ZXm66ws3wxyni6LN5ivrXqI8p
+RYyaJyn9Cheuu3rGZ/JfSWDnmCqlVSYZ0wvoxGHN7d5q1+gFup22ySBHqyvzkbj/
+vjMKN7/SG6avwv6SROvNCWh7V6cEOFxjD+LwZmn7wS4L+mRI/ptHzRKUCwle34MY
+H1boNQGUZg1/53tZw0V/WTkJaRNTQO/WKygx+xfF0nl1EMJIbHQBtzJp5UVtg04C
+kHiyp+yNPmSO23qII8gFcQs9b9Snu1dFkjQ8DhGV4wtU8uSaq0uBuf9gG44dUbCa
+gIO7qIX55TMIZWw7sAFdTNwMg7yFtczcOT2QiEORkzsF3lctY2Vj6GCy/1E9rVQ+
+zTZR6BtthhXcLe66YVfEARbb8ufVozzZByd0beEAQKI5XEUKClrNWbrOBftG4FjB
+bM/oOPgD5/HzWqMcVTMv5CQBrSagMBZgXRq1FS37n66l5bLD+qrYaQu7Gzq3UcD4
+dlDFwLsXtOk7qmbBmH8DlG++A6Ew9WVd3Frae0yJgsvmaDX5qDpQcxflWFPFpnBy
+9qojVOPMvS/qYy/bFQp0KsMFTgtlPy+U0Mi5HrpTx4cLwEnOd1CWXNucLlEcHExu
+KEBRiqBWxkfPlXBiSblmehUUSiPwO8q2kzsNOHNbpc4LDwxMcVoXw9d6J/5HLWhN
+S1vZ/Ie0zco8b9pb8A46PaC7QEL3e/E6hh2bdCf6m4HtNzHogkzCp3vCL3gvzF/6
+ean3XYbaxgHxjJ+WV3Q6xvmeAvRgAOh0Zv14u635/t9V8JeAieIoZ7QYdv6uOrKY
++Lmb2SrorpaXkZgQfhQGtKiaItONXHH2nbClR9nKZNa5nANhbv78TQPkdiMrqCPA
+2f6ZsjI9JnD9B3+QMLITjVpNvU4cxxm8DqlALBtdT1IEno+WreTmzOVWgi46MKOT
+TgrbDhhBdWLyIETkwcyIbDm9fVdTuOhmajuKTIwVVKQng4Yf5EBuIKWYMBoTg37I
+YjGXGmL3YSj0OVgcTxsdQIafifIMWRk4eC5zVFi+D9sayEyNRk/4qMVC+6gTZeOJ
+0E5Kf2bdmqhgre061+cfnsG3o039d6wamH63S7iVArfKoArPW68SOA+3KChmAZ+g
+OJ/0/iuNoYffrlO+zk57NfRE2fvPXrD8g4uh7Kolahl5tN/uT0siPkL7vThiVB+x
+6mui8eqxOuCKv7Ne5NY6But3TpeJHIYSX/U95NXcpVKB
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/
+2ghDmtXsl2YlmyUhEkKQjHOCDvcHx3FsqY9RzmUJ97JI3/w3eq/+jz2FV49aWaqW
+Cx8j2wM9vR+AmGfs8NTebM/ck7FCG7LVaTco0Yi/x9/gE2sQQ2CCCy5j1dYbHPej
+0pe6pmgOoSJUp1oyNQBdCCf+QpkyfagVAoieBrSjeKPXoS41Q9e+VDxXsUwTtgZ4
+xLv97wV+qWKkB8W6LZojHDr47ytu79dbRo1k7F7ZXm66ws3wxyni6LN5ivrXqI8p
+RYyaJyn9Cheuu3rGZ/JfSWDnmCqlVSYZ0wvoxGHN7d5q1+gFup22ySBHqyvzkbj/
+vjMKN7/SG6avwv6SROvNCWh7V6cEOFxjD+LwZmn7wS4L+mRI/ptHzRKUCwle34MY
+H1boNQGUZg1/53tZw0V/WTkJaRNTQO/WKygx+xfF0nl1EMJIbHQBtzJp5UVtg04C
+kHiyp+yNPmSO23qII8gFcQs9b9Snu1dFkjQ8DhGV4wtU8uSaq0uBuf9gG44dUbCa
+gIO7qIX55TMIZWw7sAFdTNwMg7yFtczcOT2QiEORkzsF3lctY2Vj6GCy/1E9rVQ+
+zTZR6BtthhXcLe66YVfEARbb8ufVozzZByd0beEAQKI5XEUKClrNWbrOBftG4FjB
+bM/oOPgD5/HzWqMcVTMv5CQBrSagMBZgXRq1FS37n66l5bLD+qrYaQu7Gzq3UcD4
+dlDFwLsXtOk7qmbBmH8DlG++A6Ew9WVd3Frae0yJgsvmaDX5qDpQcxflWFPFpnBy
+9qojVOPMvS/qYy/bFQp0KsMFTgtlPy+U0Mi5HrpTx4cLwEnOd1CWXNucLlEcHExu
+KEBRiqBWxkfPlXBiSblmehUUSiPwO8q2kzsNOHNbpc4LDwxMcVoXw9d6J/5HLWhN
+S1vZ/Ie0zco8b9pb8A46PaC7QEL3e/E6hh2bdCf6m4HtNzHogkzCp3vCL3gvzF/6
+ean3XYbaxgHxjJ+WV3Q6xvmeAvRgAOh0Zv14u635/t9V8JeAieIoZ7QYdv6uOrKY
++Lmb2SrorpaXkZgQfhQGtKiaItONXHH2nbClR9nKZNa5nANhbv78TQPkdiMrqCPA
+2f6ZsjI9JnD9B3+QMLITjVpNvU4cxxm8DqlALBtdT1IEno+WreTmzOVWgi46MKOT
+TgrbDhhBdWLyIETkwcyIbDm9fVdTuOhmajuKTIwVVKQng4Yf5EBuIKWYMBoTg37I
+YjGXGmL3YSj0OVgcTxsdQIafifIMWRk4eC5zVFi+D9sayEyNRk/4qMVC+6gTZeOJ
+0E5Kf2bdmqhgre061+cfnsG3o039d6wamH63S7iVArfKoArPW68SOA+3KChmAZ+g
+X4Po1QYz+3dszkDqMp4fklxBwXRsW10KXzPMTZ+sOPAveyxindmjkW8lGy+QsRlG
+PfZ+G6Z6h7mjem0Y+iWlkYcV4PIWL1iwBi8saCbGS5jN2p8M+X+Q7UNKEkROb3N6
+KOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==
+-----END CERTIFICATE-----
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCyQYbX37giBjqG
+kBb9yQQjjorY8uGDMIrQoFgb8SpAi3htWHYdqWOmG2UbN5vSn3vFQuJdsbNDGJkF
+2ghDmtXsl2YlmyUhEkKQjHOCDvcHx3FsqY9RzmUJ97JI3/w3eq/+jz2FV49aWaqW
+Cx8j2wM9vR+AmGfs8NTebM/ck7FCG7LVaTco0Yi/x9/gE2sQQ2CCCy5j1dYbHPej
+0pe6pmgOoSJUp1oyNQBdCCf+QpkyfagVAoieBrSjeKPXoS41Q9e+VDxXsUwTtgZ4
+xLv97wV+qWKkB8W6LZojHDr47ytu79dbRo1k7F7ZXm66ws3wxyni6LN5ivrXqI8p
+RYyaJyn9Cheuu3rGZ/JfSWDnmCqlVSYZ0wvoxGHN7d5q1+gFup22ySBHqyvzkbj/
+vjMKN7/SG6avwv6SROvNCWh7V6cEOFxjD+LwZmn7wS4L+mRI/ptHzRKUCwle34MY
+H1boNQGUZg1/53tZw0V/WTkJaRNTQO/WKygx+xfF0nl1EMJIbHQBtzJp5UVtg04C
+kHiyp+yNPmSO23qII8gFcQs9b9Snu1dFkjQ8DhGV4wtU8uSaq0uBuf9gG44dUbCa
+gIO7qIX55TMIZWw7sAFdTNwMg7yFtczcOT2QiEORkzsF3lctY2Vj6GCy/1E9rVQ+
+zTZR6BtthhXcLe66YVfEARbb8ufVozzZByd0beEAQKI5XEUKClrNWbrOBftG4FjB
+bM/oOPgD5/HzWqMcVTMv5CQBrSagMBZgXRq1FS37n66l5bLD+qrYaQu7Gzq3UcD4
+dlDFwLsXtOk7qmbBmH8DlG++A6Ew9WVd3Frae0yJgsvmaDX5qDpQcxflWFPFpnBy
+9qojVOPMvS/qYy/bFQp0KsMFTgtlPy+U0Mi5HrpTx4cLwEnOd1CWXNucLlEcHExu
+KEBRiqBWxkfPlXBiSblmehUUSiPwO8q2kzsNOHNbpc4LDwxMcVoXw9d6J/5HLWhN
+S1vZ/Ie0zco8b9pb8A46PaC7QEL3e/E6hh2bdCf6m4HtNzHogkzCp3vCL3gvzF/6
+ean3XYbaxgHxjJ+WV3Q6xvmeAvRgAOh0Zv14u635/t9V8JeAieIoZ7QYdv6uOrKY
++Lmb2SrorpaXkZgQfhQGtKiaItONXHH2nbClR9nKZNa5nANhbv78TQPkdiMrqCPA
+2f6ZsjI9JnD9B3+QMLITjVpNvU4cxxm8DqlALBtdT1IEno+WreTmzOVWgi46MKOT
+TgrbDhhBdWLyIETkwcyIbDm9fVdTuOhmajuKTIwVVKQng4Yf5EBuIKWYMBoTg37I
+YjGXGmL3YSj0OVgcTxsdQIafifIMWRk4eC5zVFi+D9sayEyNRk/4qMVC+6gTZeOJ
+0E5Kf2bdmqhgre061+cfnsG3o039d6wamH63S7iVArfKoArPW68SOA+3KChmAZ+g
+ZoSfjyW/TQ9U/tg2MSfISg+dtk14EubDVcrJZBv0nKqdpzNpxayIieewqfZmNQYG
+LqOhR9dE90kTb9ui+NtoTdZE3YykNOQfvtk6KHx+dG8GBUGcAhgJzEaJQfA5lgDe
+dzoVoC4ixhS6Fl2SUHwTDDlw
+-----END PRIVATE KEY-----
+```
